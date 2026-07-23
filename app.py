@@ -56,16 +56,16 @@ def validate_url(url):
     try:
         parsed = urlparse(url)
 # Block query strings
-if parsed.query:
-    return False, "Query not allowed"
+        if parsed.query:
+          return False, "Query not allowed"
 
 # Block fragments
-if parsed.fragment:
-    return False, "Fragment not allowed"
+        if parsed.fragment:
+          return False, "Fragment not allowed"
 
 # Block explicit ports
-if parsed.port is not None:
-    return False, "Port not allowed"
+        if parsed.port is not None:
+          return False, "Port not allowed"
 
         # Only HTTP/HTTPS
         if parsed.scheme not in ("http", "https"):

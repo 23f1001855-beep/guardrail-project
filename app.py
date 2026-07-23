@@ -85,16 +85,16 @@ def validate_url(url):
             return False, "Host not allowed"
 
         # Resolve all IPs
-addresses = socket.getaddrinfo(
-    host,
-    443 if parsed.scheme == "https" else 80,
-    type=socket.SOCK_STREAM
+        addresses = socket.getaddrinfo(
+            host,
+            443 if parsed.scheme == "https" else 80,
+            type=socket.SOCK_STREAM
 )
         for addr in addresses:
-ip = ipaddress.ip_address(addr[4][0])
+            ip = ipaddress.ip_address(addr[4][0])
 
-if ip.version == 6:
-    return False, "IPv6 not allowed"
+            if ip.version == 6:
+               return False, "IPv6 not allowed"
             if (
                 ip.is_private or
                 ip.is_loopback or

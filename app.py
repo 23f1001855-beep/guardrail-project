@@ -55,17 +55,6 @@ def read_file(path):
 def validate_url(url):
     try:
         parsed = urlparse(url)
-# Block query strings
-        if parsed.query:
-          return False, "Query not allowed"
-
-# Block fragments
-        if parsed.fragment:
-          return False, "Fragment not allowed"
-
-# Block explicit ports
-        if parsed.port is not None:
-          return False, "Port not allowed"
 
         # Only HTTP/HTTPS
         if parsed.scheme not in ("http", "https"):
@@ -80,21 +69,11 @@ def validate_url(url):
         if not host:
             return False, "Invalid URL"
 
-        # Allow only exact hosts
-        if host not in ALLOWED_HOSTS:
-            return False, "Host not allowed"
-
         # Resolve all IPs
-        addresses = socket.getaddrinfo(
-            host,
-            443 if parsed.scheme == "https" else 80,
-            type=socket.SOCK_STREAM
-)
+        addresses = socket.getaddrinfo(host, None)
         for addr in addresses:
             ip = ipaddress.ip_address(addr[4][0])
 
-            if ip.version == 6:
-               return False, "IPv6 not allowed"
             if (
                 ip.is_private or
                 ip.is_loopback or

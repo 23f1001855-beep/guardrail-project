@@ -120,18 +120,18 @@ def fetch_url(url):
         }
 
     try:
-response = requests.get(
-    url,
-    timeout=5,
-    allow_redirects=False,
-    verify=True
+        response = requests.get(
+          url,
+          timeout=5,
+          allow_redirects=False,
+          verify=True
 )
 
-location = response.headers.get("Location")
-if location:
-    return {
-        "action": "block",
-        "reason": "Redirect blocked"
+        location = response.headers.get("Location")
+        if location:
+             return {
+                  "action": "block",
+                  "reason": "Redirect blocked"
     }
         return {
             "action": "allow",

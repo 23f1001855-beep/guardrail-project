@@ -56,9 +56,13 @@ def validate_url(url):
     try:
         parsed = urlparse(url)
 
-        # Only allow HTTP and HTTPS
+        # Only HTTP/HTTPS
         if parsed.scheme not in ("http", "https"):
             return False, "Only HTTP/HTTPS URLs are allowed"
+
+        # Block username/password tricks
+        if parsed.username or parsed.password:
+            return False, "Userinfo not allowed"
 
         host = parsed.hostname
 
@@ -69,7 +73,7 @@ def validate_url(url):
         if host not in ALLOWED_HOSTS:
             return False, "Host not allowed"
 
-        # Resolve hostname to IP addresses
+        # Resolve all IPs
         addresses = socket.getaddrinfo(host, None)
 
         for addr in addresses:
@@ -80,7 +84,8 @@ def validate_url(url):
                 ip.is_loopback or
                 ip.is_link_local or
                 ip.is_multicast or
-                ip.is_reserved
+                ip.is_reserved or
+                ip.is_unspecified
             ):
                 return False, f"Blocked IP: {ip}"
 
